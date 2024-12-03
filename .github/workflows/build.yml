@@ -1,44 +1,20 @@
-name: Build APK
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout the code from the repository
-      - uses: actions/checkout@v2
-
-      # Set up Java JDK (required for Android build)
-      - name: Set up OpenJDK 8
-        run: sudo apt-get install -y openjdk-8-jdk
-
-      # Set up Android SDK
-      - name: Set up Android SDK
-        uses: reactivecircus/android-sdk-manager-action@v2
-        with:
-          sdk-version: '30.0.3'  # Adjust to the version you need
-
-      # Install dependencies (Python, Buildozer)
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install buildozer
-
-      # Build the APK using Buildozer
+      - uses: actions/checkout@v4
       - name: Build APK
         uses: digreatbrian/buildozer-action@v2
         with:
           python-version: 3.8
           buildozer-cmd: buildozer -v android debug
 
-      # Upload APK as artifact
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: ./bin/*.apk
